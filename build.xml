@@ -71,22 +71,22 @@
     nbproject/build-impl.xml file. 
 
     -->
-    <target name="-post-jar">
+<!--    <target name="-post-jar">
         <jar jarfile="jars/FastaSubSet.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
-                <attribute name="Main-Class" value="com.era7.bioinfo.fastautil.FastaSubSet"/>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.fastautil.FastaSubSet"/>
             </manifest>
         </jar>
-    </target>
+    </target>-->
 <!--    <target name="-post-jar">
         <jar jarfile="jars/MultifastaSelector.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/biojava.jar" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
-                <attribute name="Main-Class" value="com.era7.bioinfo.fastautil.MultifastaSelector"/>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.fastautil.MultifastaSelector"/>
             </manifest>
         </jar>
     </target>-->
@@ -95,16 +95,16 @@
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
-                <attribute name="Main-Class" value="com.era7.bioinfo.fastautil.ToMultifasta"/>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.fastautil.ToMultifasta"/>
             </manifest>
         </jar>
     </target>-->
-<!--    <target name="-post-jar">
+    <target name="-post-jar">
         <jar jarfile="jars/MergeBlastFiles.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <manifest>
-                <attribute name="Main-Class" value="com.era7.bioinfo.blast.MergeBlastfiles"/>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.blast.MergeBlastFiles"/>
             </manifest>
         </jar>
-    </target>-->
+    </target>
 </project>
