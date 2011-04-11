@@ -102,6 +102,7 @@
     <target name="-post-jar">
         <jar jarfile="jars/MergeBlastFiles.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/Era7BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.blast.MergeBlastFiles"/>
             </manifest>
