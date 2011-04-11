@@ -88,10 +88,12 @@ public class MergeBlastFiles {
                 outBuff.write("<BlastOutput_iterations>\n");
 
                 for (Iteration iteration : allIterations) {
-                    outBuff.write(iteration.toString() + "\n");
+                    String itSt = iteration.toString().trim();
+                    outBuff.write(itSt.substring(0, itSt.length() - (Iteration.TAG_NAME.length() + 3)) + "\n");
+                    outBuff.write(("</" + Iteration.TAG_NAME + ">\n"));
                 }
                 
-                outBuff.write("</BlastOutput_iterations>\n");
+                outBuff.write("\n</BlastOutput_iterations>\n");
                 outBuff.write("</BlastOutput>\n");
                 outBuff.close();
 
