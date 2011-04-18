@@ -5,12 +5,10 @@
 package com.era7.bioinfo.util.blast;
 
 import com.era7.lib.bioinfo.bioinfoutil.Executable;
-import com.era7.lib.bioinfo.bioinfoutil.uniprot.UniprotProteinRetreiver;
 import com.era7.lib.bioinfoxml.BlastOutput;
 import com.era7.lib.bioinfoxml.Hit;
 import com.era7.lib.bioinfoxml.Hsp;
 import com.era7.lib.bioinfoxml.Iteration;
-import com.era7.lib.bioinfoxml.PredictedGene;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -95,7 +93,7 @@ public class Analyze16SData implements Executable {
                         
                         String[] hitDefColumns = hit.getHitDef().split("\\|");
 
-                        System.out.println("hit.getHitDef() = " + hit.getHitDef());
+                        //System.out.println("hit.getHitDef() = " + hit.getHitDef());
 
                         String organismSt = hitDefColumns[1].split("\\(T\\)")[0];
 
@@ -107,26 +105,56 @@ public class Analyze16SData implements Executable {
                             readsPerOrganism.put(organismSt, (organismCounter+1));
                         }
 
-                        readLine += organismSt;
+                        readLine += organismSt + SEPARATOR;
 
                         String genBankIdSt = hitDefColumns[3];
                         organismGenBankIdMap.put(organismSt, genBankIdSt);
                         
-                        readLine += genBankIdSt;
+                        readLine += genBankIdSt + SEPARATOR;
 
                         List<Hsp> hsps = hit.getHitHsps();
                         double minEvalue = 1000000;
                         double identitySum = 0;
-                        for (Hsp hsp : hsps) {
+
+                        boolean thereIsOverlapping = false;
+
+                        boolean[] overlappingArray = new boolean[hit.getHitLen()];
+                       
+                        for (int i=0; i<hsps.size();i++) {
+
+                            Hsp hsp = hsps.get(i);
                             double tempEvalue = hsp.getEvalueDoubleFormat();
                             if(tempEvalue < minEvalue){
                                 minEvalue = tempEvalue;
                             }
                             identitySum += Double.parseDouble(hsp.getIdentity());
+
+                            int fromPos, toPos;
+                            fromPos = hsp.getQueryFrom();
+                            toPos = hsp.getQueryTo();
+                            if(fromPos > toPos){
+                                int swap = fromPos;
+                                fromPos = toPos;
+                                toPos = swap;
+                            }
+
+                            for(int j = fromPos  - 1; j < toPos; j++){
+                                if(overlappingArray[j]){
+                                    thereIsOverlapping = true;
+                                }
+                                overlappingArray[j] = true;
+                            }
+
                         }
 
                         readLine += minEvalue + SEPARATOR;
-                        readLine += identitySum + SEPARATOR;
+                        if(!thereIsOverlapping){
+                            readLine += identitySum;
+                        }else{
+                            System.out.println("There was overlapping for: " + hit.getHitDef());
+                            System.out.println("minEvalue = " + minEvalue);
+                        }
+                        
 
                         readsOutBuff.write(readLine + "\n");
 
