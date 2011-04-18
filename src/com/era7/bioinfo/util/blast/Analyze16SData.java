@@ -43,7 +43,7 @@ public class Analyze16SData implements Executable {
             System.out.println("This program expects three parameters: \n"
                     + "1. Input Blast XML file \n"
                     + "2. Output reads annotation file\n"
-                    + "2. Output species quantification file\n");
+                    + "3. Output species quantification file\n");
         } else {
 
 
