@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,7 +95,13 @@ public class GetIsotigsSequences implements Executable {
                 System.out.println("Reading annotation file...");
 
                 //---------getting lines from annotation file and storing them in map------
-                HashMap<String,String> uniprotLinesMap = new HashMap<String, String>();
+                HashMap<String,ArrayList<String>> uniprotLinesMap = new HashMap<String, ArrayList<String>>();
+
+                //-----------filling uniprot lines map with uniprot ids-------
+                for (String uniprotId : uniprotIds) {
+                   ArrayList<String> array = new ArrayList<String>();
+                   uniprotLinesMap.put(uniprotId, array);
+                }
 
                 inBuff = new BufferedReader(new FileReader(annotationFile));
               
@@ -108,7 +115,7 @@ public class GetIsotigsSequences implements Executable {
                     String isotigId = columns[0];
                     
                     if(uniprotIds.contains(uniprotId) ){
-                        uniprotLinesMap.put(uniprotId, (line + SEPARATOR + isotigsSequencesMap.get(isotigId)));
+                        uniprotLinesMap.get(uniprotId).add(line + SEPARATOR + isotigsSequencesMap.get(isotigId));                        
                     }
                 }
                 inBuff.close();
@@ -122,9 +129,12 @@ public class GetIsotigsSequences implements Executable {
                 outBuff.write(header + SEPARATOR + "sequence" + "\n");
 
                 for (String key : uniprotLinesMap.keySet()) {
-                    
-                    outBuff.write(uniprotLinesMap.get(key) + "\n");
 
+                    ArrayList<String> array = uniprotLinesMap.get(key);
+                    for (String lineSt : array) {
+                        outBuff.write(lineSt + "\n");
+                    }
+                    
                 }
 
                 outBuff.close();
