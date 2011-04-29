@@ -24,8 +24,8 @@ import java.util.List;
  */
 public class Analyze16SData implements Executable {
 
-    public static final String READS_FILE_HEADER = "Read_ID\tLength\tOrganism\tGenBank_ID\tE_value\tIdentity\n";
-    public static final String QUANTIFICATION_FILE_HEADER = "Organism\tGenBank_ID\tReads_Abs\tReads_Rel\n";
+    public static final String READS_FILE_HEADER = "Read_ID\tOrganism\tE_value\tLength\tIdentity_Abs\tIdentity_Rel\n";
+    public static final String QUANTIFICATION_FILE_HEADER = "Organism\tReads_Abs\tReads_Rel\n";
     public static final String SEPARATOR = "\t";
 
     public void execute(ArrayList<String> array) {
@@ -89,8 +89,7 @@ public class Analyze16SData implements Executable {
 
                         String readLine = "";
                         readLine += iteration.getQueryDef().split(" ")[0] + SEPARATOR;
-                        readLine += iteration.getQueryLen() + SEPARATOR;
-                        
+                                                
                         String[] hitDefColumns = hit.getHitDef().split("\\|");
 
                         //System.out.println("hit.getHitDef() = " + hit.getHitDef());
@@ -109,8 +108,8 @@ public class Analyze16SData implements Executable {
 
                         String genBankIdSt = hitDefColumns[3];
                         organismGenBankIdMap.put(organismSt, genBankIdSt);
-                        
-                        readLine += genBankIdSt + SEPARATOR;
+//                        
+//                        readLine += genBankIdSt + SEPARATOR;
 
                         List<Hsp> hsps = hit.getHitHsps();
                         double minEvalue = 1000000;
@@ -146,11 +145,25 @@ public class Analyze16SData implements Executable {
                             }
 
                         }
-
+                        
+                        //--------------evalue-----------                        
                         readLine += minEvalue + SEPARATOR;
+                        
+                        //----------length--------------
+                        readLine += iteration.getQueryLen() + SEPARATOR;
+                        
+                        //----------identity--------------
                         if(!thereIsOverlapping){
-                            readLine += identitySum;
+                            
+                            //-----absolute-----
+                            readLine += identitySum + SEPARATOR;
+                            
+                            //-----relative------
+                            readLine += (identitySum/Double.parseDouble(iteration.getQueryLen()))*100.0;
+                            
+                            
                         }else{
+                            readLine += SEPARATOR;
                             System.out.println("There was overlapping for: " + hit.getHitDef());
                             System.out.println("minEvalue = " + minEvalue);
                         }
@@ -174,7 +187,7 @@ public class Analyze16SData implements Executable {
 
                     String quantificationLine = "";
                     quantificationLine += organism + SEPARATOR;
-                    quantificationLine += organismGenBankIdMap.get(organism) + SEPARATOR;
+                    //quantificationLine += organismGenBankIdMap.get(organism) + SEPARATOR;
                     quantificationLine += readsPerOrganism.get(organism) + SEPARATOR;
                     quantificationLine += ((readsPerOrganism.get(organism) * 100.0)/readsNumber) + SEPARATOR + "\n";
 
