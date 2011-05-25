@@ -13,9 +13,10 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.biojava.bio.seq.DNATools;
+import org.biojava.bio.symbol.SymbolList;
 
 /**
  *
@@ -34,12 +35,13 @@ public class GetIsotigsSequences implements Executable {
     }
 
     public static void main(String[] args) {
-        if (args.length != 4) {
-            System.out.println("This program expects four parameters: \n"
+        if (args.length != 5) {
+            System.out.println("This program expects five parameters: \n"
                     + "1. Input TXT with uniprot ids\n"
                     + "2. Input Multifasta file with isotigs sequences\n"
                     + "3. Input isotigs annotation file\n"
-                    + "4. Output filename\n");
+                    + "4. Complementary inverted sequence for - strand (true/false)\n"
+                    + "5. Output filename\n");
         } else {
 
 
@@ -48,18 +50,21 @@ public class GetIsotigsSequences implements Executable {
             File multifastaFile = new File(args[1]);
             File annotationFile = new File(args[2]);
 
-            File outFile = new File(args[3]);
+            File outFile = new File(args[4]);
 
             String line = null;
 
             try {
 
+                boolean returnComplementaryInverted = Boolean.parseBoolean(args[3]);
+                
+                System.out.println("returnComplementaryInverted = " + returnComplementaryInverted);
 
                 System.out.println("Reading uniprot ids file...");
 
                 //------------------read set 1 uniprot ids---------------
                 HashSet<String> uniprotIds = new HashSet<String>();
-                
+
                 BufferedReader inBuff = new BufferedReader(new FileReader(set1File));
                 while ((line = inBuff.readLine()) != null) {
                     uniprotIds.add(line.trim());
@@ -77,16 +82,16 @@ public class GetIsotigsSequences implements Executable {
                 String currentIsotigId = null;
 
                 while ((line = inBuff.readLine()) != null) {
-                    if(line.charAt(0) == '>'){
+                    if (line.charAt(0) == '>') {
 
-                        if(sequenceStBuilder != null){
+                        if (sequenceStBuilder != null) {
                             //storing isotig sequence
                             isotigsSequencesMap.put(currentIsotigId, sequenceStBuilder.toString());
                         }
 
                         sequenceStBuilder = new StringBuilder();
                         currentIsotigId = line.split("\\|")[1];
-                    }else{
+                    } else {
                         sequenceStBuilder.append(line);
                     }
                 }
@@ -95,16 +100,16 @@ public class GetIsotigsSequences implements Executable {
                 System.out.println("Reading annotation file...");
 
                 //---------getting lines from annotation file and storing them in map------
-                HashMap<String,ArrayList<String>> uniprotLinesMap = new HashMap<String, ArrayList<String>>();
+                HashMap<String, ArrayList<String>> uniprotLinesMap = new HashMap<String, ArrayList<String>>();
 
                 //-----------filling uniprot lines map with uniprot ids-------
                 for (String uniprotId : uniprotIds) {
-                   ArrayList<String> array = new ArrayList<String>();
-                   uniprotLinesMap.put(uniprotId, array);
+                    ArrayList<String> array = new ArrayList<String>();
+                    uniprotLinesMap.put(uniprotId, array);
                 }
 
                 inBuff = new BufferedReader(new FileReader(annotationFile));
-              
+
                 //reading the header
                 String header = inBuff.readLine();
 
@@ -113,9 +118,21 @@ public class GetIsotigsSequences implements Executable {
                     String[] columns = line.split("\t");
                     String uniprotId = columns[4];
                     String isotigId = columns[0];
-                    
-                    if(uniprotIds.contains(uniprotId) ){
-                        uniprotLinesMap.get(uniprotId).add(line + SEPARATOR + isotigsSequencesMap.get(isotigId));                        
+                    String strand = columns[3];
+
+                    if (uniprotIds.contains(uniprotId)) {
+
+                        String seqSt = isotigsSequencesMap.get(isotigId);
+
+                        if (returnComplementaryInverted && strand.equals("-")) {
+                            SymbolList symL = DNATools.createDNA(seqSt);
+                            symL = DNATools.reverseComplement(symL);
+                            seqSt = symL.seqString();                            
+                        }
+
+                        uniprotLinesMap.get(uniprotId).add(line + SEPARATOR + seqSt);
+
+
                     }
                 }
                 inBuff.close();
@@ -125,7 +142,7 @@ public class GetIsotigsSequences implements Executable {
 
                 //-------Now I just have to write the output file----
                 BufferedWriter outBuff = new BufferedWriter(new FileWriter(outFile));
-                
+
                 outBuff.write(header + SEPARATOR + "sequence" + "\n");
 
                 for (String key : uniprotLinesMap.keySet()) {
@@ -134,7 +151,7 @@ public class GetIsotigsSequences implements Executable {
                     for (String lineSt : array) {
                         outBuff.write(lineSt + "\n");
                     }
-                    
+
                 }
 
                 outBuff.close();
