@@ -120,6 +120,7 @@
     <target name="-post-jar">
         <jar jarfile="jars/GetIsotigsSequences.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/biojava.jar" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.GetIsotigsSequences"/>
