@@ -90,7 +90,7 @@ public class GetIsotigsSequences implements Executable {
                         }
 
                         sequenceStBuilder = new StringBuilder();
-                        currentIsotigId = line.split("\\|")[1];
+                        currentIsotigId = line.substring(1).split("\\|")[0];
                     } else {
                         sequenceStBuilder.append(line);
                     }
@@ -123,6 +123,8 @@ public class GetIsotigsSequences implements Executable {
                     if (uniprotIds.contains(uniprotId)) {
 
                         String seqSt = isotigsSequencesMap.get(isotigId);
+                        
+                        //System.out.println("isotigId = " + isotigId);
 
                         if (returnComplementaryInverted && strand.equals("-")) {
                             SymbolList symL = DNATools.createDNA(seqSt);
