@@ -120,18 +120,45 @@
 <!--    <target name="-post-jar">
         <jar jarfile="jars/GetIsotigsSequences.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-            <zipfileset src="lib/biojava.jar" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.GetIsotigsSequences"/>
             </manifest>
         </jar>
     </target>-->
-    <target name="-post-jar">
+<!--    <target name="-post-jar">
         <jar jarfile="jars/DetectPotatos.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.DetectPotatos"/>
+            </manifest>
+        </jar>
+    </target>-->
+<!--    <target name="-post-jar">
+        <jar jarfile="jars/DetectNumberOfSequencesInFastQ.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.DetectNumberOfSequencesInFastQ"/>
+            </manifest>
+        </jar>
+    </target>-->
+<!--    <target name="-post-jar">
+        <jar jarfile="jars/DetectRegionsByCoverageThresholdQual.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/Era7BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.coverage.DetectRegionsByCoverageThresholdQual"/>
+            </manifest>
+        </jar>
+    </target>-->
+    <target name="-post-jar">
+        <jar jarfile="jars/DetectRegionsByCoverageThresholdWig.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/Era7BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.coverage.DetectRegionsByCoverageThresholdWig"/>
             </manifest>
         </jar>
     </target>

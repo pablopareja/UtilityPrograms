@@ -5,6 +5,7 @@
 package com.era7.bioinfo.util;
 
 import com.era7.lib.bioinfo.bioinfoutil.Executable;
+import com.era7.lib.bioinfo.bioinfoutil.seq.SeqUtil;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,8 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.biojava.bio.seq.DNATools;
-import org.biojava.bio.symbol.SymbolList;
 
 /**
  *
@@ -126,10 +125,8 @@ public class GetIsotigsSequences implements Executable {
                         
                         //System.out.println("isotigId = " + isotigId);
 
-                        if (returnComplementaryInverted && strand.equals("-")) {
-                            SymbolList symL = DNATools.createDNA(seqSt);
-                            symL = DNATools.reverseComplement(symL);
-                            seqSt = symL.seqString();                            
+                        if (returnComplementaryInverted && strand.equals("-")) {                              
+                            seqSt = SeqUtil.getComplementaryInverted(seqSt);
                         }
 
                         uniprotLinesMap.get(uniprotId).add(line + SEPARATOR + seqSt);

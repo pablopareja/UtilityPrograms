@@ -5,6 +5,7 @@
 package com.era7.bioinfo.util.fastautil;
 
 import com.era7.lib.bioinfo.bioinfoutil.fasta.FastaUtil;
+import com.era7.lib.bioinfo.bioinfoutil.seq.SeqUtil;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,8 +13,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.HashSet;
-import org.biojava.bio.seq.DNATools;
-import org.biojava.bio.symbol.SymbolList;
 
 /**
  *
@@ -102,10 +101,9 @@ public class MultifastaSelector {
                             seq = seq.toUpperCase();
 
                             if (selectorValuesMap.get(currentID).equals(REVERSED_ST)) {
-
-                                SymbolList symL = DNATools.createDNA(seq);
-                                symL = DNATools.reverseComplement(symL);
-                                seq = symL.seqString().toUpperCase();
+                                
+                                seq = SeqUtil.getComplementaryInverted(seq).toUpperCase();
+                                
                             }
 
                             System.out.println("writing header for " + currentID);
