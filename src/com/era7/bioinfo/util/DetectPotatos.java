@@ -15,7 +15,7 @@ public class DetectPotatos {
 
         if (args.length != 4) {
             System.out.println("The parameteres for this program are:" + "\n"
-                    + "1.- Name of the file" + "\n"
+                    + "1.- Name of the XML input file" + "\n"
                     + "2.- Number of characters expected" + "\n"
                     + "3.- Character to look for" + "\n"
                     + "4.- Name of the tag in which text the character is searched");
