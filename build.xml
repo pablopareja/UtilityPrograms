@@ -126,14 +126,14 @@
             </manifest>
         </jar>
     </target>-->
-<!--    <target name="-post-jar">
+    <target name="-post-jar">
         <jar jarfile="jars/DetectPotatos.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.DetectPotatos"/>
             </manifest>
         </jar>
-    </target>-->
+    </target>
 <!--    <target name="-post-jar">
         <jar jarfile="jars/DetectNumberOfSequencesInFastQ.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
@@ -172,7 +172,7 @@
             </manifest>
         </jar>
     </target>-->
-    <target name="-post-jar">
+<!--    <target name="-post-jar">
         <jar jarfile="jars/ExportGoSlimToTSV.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/Era7BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
@@ -181,5 +181,5 @@
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.go.ExportGoSlimToTSV"/>
             </manifest>
         </jar>
-    </target>
+    </target>-->
 </project>
