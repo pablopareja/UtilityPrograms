@@ -48,6 +48,8 @@ public class DetectPotatos {
                 }
 
             }
+            
+            reader.close();
 
 
         }
