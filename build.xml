@@ -134,7 +134,7 @@
             </manifest>
         </jar>
     </target>-->
-    <target name="-post-jar">
+<!--    <target name="-post-jar">
         <jar jarfile="jars/PrettyPrintXMLFile.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/Era7BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
@@ -143,7 +143,7 @@
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.xml.PrettyPrintXMLFile"/>
             </manifest>
         </jar>
-    </target>
+    </target>-->
 <!--    <target name="-post-jar">
         <jar jarfile="jars/DetectNumberOfSequencesInFastQ.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
@@ -192,4 +192,12 @@
             </manifest>
         </jar>
     </target>-->
+    <target name="-post-jar">
+        <jar jarfile="jars/RemoveExtraVerticalBarsFromFastaHeaders.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.fastautil.RemoveExtraVerticalBarsFromFastaHeaders"/>
+            </manifest>
+        </jar>
+    </target>
 </project>
