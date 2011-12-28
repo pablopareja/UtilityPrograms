@@ -41,7 +41,11 @@ public class RemoveExtraVerticalBarsFromFastaHeaders {
                     if(columns.length <= 3){
                         result = line;
                     }else{
-                        result = columns[0] + "|" + columns[1] + "|" + columns[2];
+                        result = columns[0] + "|" + columns[1] + "|" + columns[2] + " ";
+                        for(int i=3; i<columns.length; i++){
+                            result += columns[i] + " ";
+                        }
+                        result = result.substring(0, result.length() - 1); //getting rid of the last whitespace
                     }
                     
                     writer.write(result + "\n");
