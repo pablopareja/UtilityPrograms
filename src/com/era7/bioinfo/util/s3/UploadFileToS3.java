@@ -6,6 +6,7 @@ package com.era7.bioinfo.util.s3;
 
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.amazonaws.services.securitytoken.model.Credentials;
 import com.era7.bioinfo.bioinfoaws.util.CredentialsRetriever;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,15 +21,24 @@ import java.util.logging.Logger;
 public class UploadFileToS3 {
 
     public static void main(String[] args)  {
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.out.println("This program expects the following parameters:\n"
                     + "1. Name of file to be uploaded \n"
-                    + "2. Bucket name \n");
+                    + "2. Bucket name \n"
+                    + "3. AWS credentials file name + path (enter '-' for using our super AMIs ;) )\n");
         } else {
             try {
                 System.out.println("Creating transfer manager...");
 
-                TransferManager transferManager = new TransferManager(CredentialsRetriever.getBasicAWSCredentialsFromOurAMI());
+                TransferManager transferManager = null;
+                
+                if(args[2].equals("-")){
+                    transferManager = new TransferManager(CredentialsRetriever.getBasicAWSCredentialsFromOurAMI());
+                }else{
+                    transferManager = new TransferManager(CredentialsRetriever.getCredentialsFromPropertiesFile(new File(args[2])));
+                }
+                
+                
 
                 File file = new File(args[0]);
                 Upload myUpload = transferManager.upload(args[1], file.getName(), file);
