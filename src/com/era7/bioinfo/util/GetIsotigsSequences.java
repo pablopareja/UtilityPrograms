@@ -25,6 +25,7 @@ public class GetIsotigsSequences implements Executable {
 
     public static final String SEPARATOR = "\t";
 
+    @Override
     public void execute(ArrayList<String> array) {
         String[] args = new String[array.size()];
         for (int i = 0; i < array.size(); i++) {
