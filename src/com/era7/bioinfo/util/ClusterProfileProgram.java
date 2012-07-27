@@ -15,15 +15,8 @@
 package com.era7.bioinfo.util;
 
 import com.era7.lib.bioinfo.bioinfoutil.Executable;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +46,7 @@ public class ClusterProfileProgram implements Executable {
                     + "4. Output table filename\n");
         } else {
 
-            BufferedReader reader = null;
+            BufferedReader reader;
 
             try {
 
@@ -68,9 +61,10 @@ public class ClusterProfileProgram implements Executable {
                 HashMap<String, HashMap<String, Set<String>>> superMap = new HashMap<String, HashMap<String, Set<String>>>();
 
                 HashMap<String, String> plasmidsSignatures = new HashMap<String, String>();
+                LinkedList<String> clusterNames = new LinkedList<String>();
 
                 //-----------plasmids file------------------
-                String line = null;
+                String line;
                 reader = new BufferedReader(new FileReader(plasmidsFile));
                 while ((line = reader.readLine()) != null) {
                     plasmidsSet.add(line.trim());
@@ -83,6 +77,15 @@ public class ClusterProfileProgram implements Executable {
                 reader = new BufferedReader(new FileReader(clustersFile));
                 while ((line = reader.readLine()) != null) {
                     String[] protColumns = line.substring(1).split("\t");
+                    
+                    //storing cluster name
+                    String[] tempCols = protColumns[0].split("\\|");
+                    String tempSt = "";
+                    for (int i = 2; i < tempCols.length; i++) {
+                        tempSt += tempCols[i];
+                    }
+                    clusterNames.add(tempSt);
+                    
                     for (String protColumn : protColumns) {
                         //System.out.println("protColumn = " + protColumn);
                         String[] barColumns = protColumn.split("\\|");
@@ -115,11 +118,16 @@ public class ClusterProfileProgram implements Executable {
 
                 //----writing header----
                 outBuff.write("\t");
-                for (int i = 0; i < lineCounter - 1; i++) {
-                    String clusterSt = "Cluster " + (i + 1);
-                    outBuff.write(clusterSt + "\t");
+                String headerSt = "";
+                
+//                for (int i = 0; i < lineCounter ; i++) {
+//                    //String clusterSt = "Cluster " + (i + 1);                    
+//                    headerSt += clusterNames.get(i) + "\t";
+//                }
+                for (String clusterName : clusterNames) {
+                    headerSt += clusterName + "\t";
                 }
-                outBuff.write("Cluster " + lineCounter + "\n");
+                outBuff.write(headerSt.substring(0,headerSt.length() - 1) + "\n");
 
                 for (String plasmidID : plasmidsSet) {
                     
@@ -156,11 +164,16 @@ public class ClusterProfileProgram implements Executable {
                 outBuff = new BufferedWriter(new FileWriter(signaturefile));
                 //----writing header----
                 outBuff.write("\t");
-                for (int i = 0; i < lineCounter - 1; i++) {
-                    String clusterSt = "Cluster " + (i + 1);
-                    outBuff.write(clusterSt + "\t");
+//                for (int i = 0; i < lineCounter - 1; i++) {
+//                    String clusterSt = "Cluster " + (i + 1);
+//                    outBuff.write(clusterSt + "\t");
+//                }
+//                outBuff.write("Cluster " + lineCounter + "\n");
+                headerSt = "";
+                for (String clusterName : clusterNames) {
+                    headerSt += clusterName + "\t";
                 }
-                outBuff.write("Cluster " + lineCounter + "\n");
+                outBuff.write(headerSt.substring(0,headerSt.length()-1) + "\n");
                 for (String plasmidID : plasmidsSet) {
                     outBuff.write(plasmidID + "\t" + plasmidsSignatures.get(plasmidID) + "\n");
                 }
