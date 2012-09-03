@@ -22,30 +22,35 @@ import java.io.FileReader;
  * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
 public class DetectNumberOfSequencesInFastQ {
-    
-    public static void main(String args[]) throws Exception{
-        
-        int atCounter = 0;
-        int linesCounter = 0;
-        
-        BufferedReader reader = new BufferedReader(new FileReader(args[0]));
-        String line = null;
-        while((line = reader.readLine()) != null){
-            if(line.startsWith("@")){
-                atCounter++;
+
+    public static void main(String args[]) throws Exception {
+
+        if (args.length != 1) {
+            System.out.println("This program expects the following parameters:\n"
+                    + "1. Input FastQ file");
+        } else {
+            int atCounter = 0;
+            int linesCounter = 0;
+
+
+            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("@")) {
+                    atCounter++;
+                }
+                linesCounter++;
+
+                if (linesCounter % 10000 == 0) {
+                    System.out.println("linesCounter = " + linesCounter);
+                }
             }
-            linesCounter++;
-            
-            if(linesCounter % 10000 == 0){
-                System.out.println("linesCounter = " + linesCounter);
-            }
+
+            reader.close();
+
+            System.out.println("atCounter = " + atCounter);
+            System.out.println("linesCounter = " + linesCounter);
         }
-        
-        reader.close();
-        
-        System.out.println("atCounter = " + atCounter);
-        System.out.println("linesCounter = " + linesCounter);
-        
+
     }
-    
 }

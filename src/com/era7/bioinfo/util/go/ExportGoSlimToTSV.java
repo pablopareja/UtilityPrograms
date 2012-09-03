@@ -18,11 +18,7 @@ import com.era7.lib.bioinfo.bioinfoutil.Executable;
 import com.era7.lib.bioinfoxml.go.GOSlimXML;
 import com.era7.lib.bioinfoxml.go.GoTermXML;
 import com.era7.lib.bioinfoxml.go.SlimSetXML;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -42,6 +38,7 @@ public class ExportGoSlimToTSV implements Executable{
     public static String HEADER_2 = "id" + SEPARATOR + 
                         "name" + SEPARATOR + "annotations_count" + SEPARATOR;
 
+    @Override
     public void execute(ArrayList<String> array) {
         String[] args = new String[array.size()];
         for(int i=0;i<array.size();i++){
@@ -53,8 +50,8 @@ public class ExportGoSlimToTSV implements Executable{
     public static void main(String[] args) {
 
         if (args.length != 1) {
-            System.out.println("El programa espera un parametro: \n"
-                    + "1. Nombre del archivo xml con los datos de GOSlim \n");
+            System.out.println("This program expects the following parameters: \n"
+                    + "1. GOSlim XML input file \n");
         } else {
 
             String inFileString = args[0];

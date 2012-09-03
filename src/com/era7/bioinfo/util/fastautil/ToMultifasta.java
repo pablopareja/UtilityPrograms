@@ -14,13 +14,10 @@
  */
 package com.era7.bioinfo.util.fastautil;
 
+import com.era7.lib.bioinfo.bioinfoutil.Executable;
 import com.era7.lib.bioinfo.bioinfoutil.fasta.FastaUtil;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,9 +25,19 @@ import java.util.logging.Logger;
  *
  * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
-public class ToMultifasta {
+public class ToMultifasta implements Executable{
 
     public static final int SEQUENCE_LINE_LENGTH = 60;
+    
+    
+    @Override
+    public void execute(ArrayList<String> array) {
+        String[] args = new String[array.size()];
+        for (int i = 0; i < array.size(); i++) {
+            args[i] = array.get(i);
+        }
+        main(args);
+    }
 
     public static void main(String[] args){
 

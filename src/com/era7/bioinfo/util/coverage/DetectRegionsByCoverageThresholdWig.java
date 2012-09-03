@@ -134,7 +134,7 @@ public class DetectRegionsByCoverageThresholdWig implements Executable {
             int threshold,
             int minimumLength) {
 
-        boolean hayGaps = false;
+        boolean gapsFound = false;
 
         for (int i = 0; i < positions.size(); i++) {
             int value = positions.get(i);
@@ -162,12 +162,12 @@ public class DetectRegionsByCoverageThresholdWig implements Executable {
                 }
 
                 if((gap.getEndPosition() - gap.getStartPosition() + 1) >= minimumLength ){
-                    hayGaps = true;
+                    gapsFound = true;
                     contig.addGap(gap);
                 }
             }
         }
 
-        return hayGaps;
+        return gapsFound;
     }
 }

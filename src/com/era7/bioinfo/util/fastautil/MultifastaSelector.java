@@ -14,13 +14,11 @@
  */
 package com.era7.bioinfo.util.fastautil;
 
+import com.era7.lib.bioinfo.bioinfoutil.Executable;
 import com.era7.lib.bioinfo.bioinfoutil.fasta.FastaUtil;
 import com.era7.lib.bioinfo.bioinfoutil.seq.SeqUtil;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -28,10 +26,19 @@ import java.util.HashSet;
  *
  * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
-public class MultifastaSelector {
+public class MultifastaSelector implements Executable{
 
     public static final String REVERSED_ST = "R";
     public static final int SEQUENCE_LINE_LENGTH = 60;
+    
+    @Override
+    public void execute(ArrayList<String> array) {
+        String[] args = new String[array.size()];
+        for (int i = 0; i < array.size(); i++) {
+            args[i] = array.get(i);
+        }
+        main(args);
+    }
 
     /**
      * @param args the command line arguments

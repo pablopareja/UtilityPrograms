@@ -14,29 +14,40 @@
  */
 package com.era7.bioinfo.util.fastautil;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import com.era7.lib.bioinfo.bioinfoutil.Executable;
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
-public class RemoveExtraVerticalBarsFromFastaHeaders {
+public class RemoveExtraVerticalBarsFromFastaHeaders implements Executable {
+    
+    @Override
+    public void execute(ArrayList<String> array) {
+        String[] args = new String[array.size()];
+        for (int i = 0; i < array.size(); i++) {
+            args[i] = array.get(i);
+        }
+        try{
+            main(args);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) throws Exception{
         if (args.length != 2) {
             System.out.println("The parameteres for this program are:" + "\n"
                     + "1.- Name of the Fasta input file" + "\n"
-                    + "4.- Name of the Fasta output file");
+                    + "2.- Name of the Fasta output file");
         } else {
             
             
             BufferedReader reader = new BufferedReader(new FileReader(new File(args[0])));
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(args[1])));
-            String line = null;
+            String line;
 
             System.out.println("Reading file input file....");
 
@@ -44,7 +55,7 @@ public class RemoveExtraVerticalBarsFromFastaHeaders {
                 
                 if (line.trim().startsWith(">")) {
                     
-                    String result = "";
+                    String result;
                     String[] columns = line.split("\\|");
                     
                     if(columns.length <= 3){
