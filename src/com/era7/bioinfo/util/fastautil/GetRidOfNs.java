@@ -63,13 +63,13 @@ public class GetRidOfNs implements Executable{
 
 
                         if (stBuilder.length() > 0) {
-                            List<String> seqTracts = splitSequenceByNTracts(stBuilder.toString());
+                            List<SequenceTract> seqTracts = splitSequenceByNTracts(stBuilder.toString());
                             if (seqTracts.size() > 1) {
                                 numberOfReadsWithNs++;
                             }
-                            for (String seqTract : seqTracts) {
-                                outWriter.write(">" + formatNumber(newReadsCounter) + "|" + lastID + "\n");
-                                outWriter.write(FastaUtil.formatSequenceWithFastaFormat(seqTract, SEQUENCE_LINE_LEGTH));
+                            for (SequenceTract seqTract : seqTracts) {
+                                outWriter.write(">" + formatNumber(newReadsCounter) + "|" + lastID + "|" + seqTract.getRelativeStartPosition() + "\n");
+                                outWriter.write(FastaUtil.formatSequenceWithFastaFormat(seqTract.getSequence(), SEQUENCE_LINE_LEGTH));
                                 newReadsCounter++;
                             }
                             //--freeing up the stbuilder--
@@ -86,13 +86,13 @@ public class GetRidOfNs implements Executable{
 
                 //---------------last read included in the file------------------
                 if (stBuilder.length() > 0) {
-                    List<String> seqTracts = splitSequenceByNTracts(stBuilder.toString());
+                    List<SequenceTract> seqTracts = splitSequenceByNTracts(stBuilder.toString());
                     if (seqTracts.size() > 1) {
                         numberOfReadsWithNs++;
                     }
-                    for (String seqTract : seqTracts) {
-                        outWriter.write(">" + formatNumber(newReadsCounter) + "|" + lastID + "\n");
-                        outWriter.write(FastaUtil.formatSequenceWithFastaFormat(seqTract, SEQUENCE_LINE_LEGTH));
+                    for (SequenceTract seqTract : seqTracts) {
+                        outWriter.write(">" + formatNumber(newReadsCounter) + "|" + lastID + "|" + seqTract.getRelativeStartPosition() +"\n");
+                        outWriter.write(FastaUtil.formatSequenceWithFastaFormat(seqTract.getSequence(), SEQUENCE_LINE_LEGTH));
                         newReadsCounter++;
                     }
                     //--freeing up the stbuilder--
@@ -117,12 +117,14 @@ public class GetRidOfNs implements Executable{
 
     }
 
-    public static List<String> splitSequenceByNTracts(String sequence) {
+    public static List<SequenceTract> splitSequenceByNTracts(String sequence) {
 
-        List<String> result = new LinkedList<String>();
+        List<SequenceTract> result = new LinkedList<SequenceTract>();
 
         int currentPos = 0;
+        int startPos = 1;
         StringBuilder stBuilder = new StringBuilder();
+        boolean updateStartPos = false;
 
         while (currentPos < sequence.length()) {
             char currentChar = sequence.charAt(currentPos);
@@ -130,18 +132,25 @@ public class GetRidOfNs implements Executable{
             if (currentChar == 'n' || currentChar == 'N') {
 
                 if (stBuilder.length() > 0) {
-                    result.add(stBuilder.toString());
+                    result.add(new SequenceTract(stBuilder.toString(), startPos));
                     stBuilder.delete(0, stBuilder.length());
                 }
+                
+                updateStartPos = true;
 
             } else {
                 stBuilder.append(currentChar);
+                
+                if(updateStartPos){
+                    startPos = currentPos;
+                    updateStartPos = false;
+                }
             }
             currentPos++;
         }
         
         if(stBuilder.length() > 0){
-            result.add(stBuilder.toString());
+            result.add(new SequenceTract(stBuilder.toString(), startPos));
         }
 
         return result;
