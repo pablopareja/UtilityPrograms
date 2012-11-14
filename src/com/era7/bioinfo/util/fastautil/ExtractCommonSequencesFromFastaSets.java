@@ -70,12 +70,12 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
             File outStatsFile = new File(args[5]);
 
             try {
-                
+
                 fh = new FileHandler("ExtractCommonSequencesFromFastaSets.log", true);
                 SimpleFormatter formatter = new SimpleFormatter();
                 fh.setFormatter(formatter);
                 logger.addHandler(fh);
-                logger.setLevel(Level.ALL);    
+                logger.setLevel(Level.ALL);
 
                 System.out.println("Initializing buffered writers...");
                 BufferedWriter outFastaBuff = new BufferedWriter(new FileWriter(outFastaFile));
@@ -104,7 +104,7 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                             String prefix = seq.substring(0, numberOfCharsForPrefixSufix).toLowerCase();
                             prefixesFound.add(prefix);
 
-                            String sufix = seq.substring(seq.length() - numberOfCharsForPrefixSufix, seq.length());
+                            String sufix = seq.substring(seq.length() - numberOfCharsForPrefixSufix, seq.length()).toLowerCase();
                             sufixesFound.add(sufix);
 
                             seqLengthsFoundInFasta1.add(seqLengthCounter);
@@ -132,7 +132,7 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                     String prefix = seq.substring(0, numberOfCharsForPrefixSufix).toLowerCase();
                     prefixesFound.add(prefix);
 
-                    String sufix = seq.substring(seq.length() - numberOfCharsForPrefixSufix, seq.length());
+                    String sufix = seq.substring(seq.length() - numberOfCharsForPrefixSufix, seq.length()).toLowerCase();
                     sufixesFound.add(sufix);
 
                     stBuilder.delete(0, seq.length());
@@ -151,6 +151,7 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                 reader = new BufferedReader(new FileReader(inFastaFile2));
                 stBuilder = new StringBuilder();
                 lineCounter = 0;
+                String lastHeader = "";
                 while ((line = reader.readLine()) != null) {
 
                     if (line.charAt(0) == '>') {
@@ -164,8 +165,10 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
 
                                 if (prefixesFound.contains(seq.substring(0, numberOfCharsForPrefixSufix).toLowerCase())) {
 
-                                    if (sufixesFound.contains(seq.substring(seq.length() - numberOfCharsForPrefixSufix, seq.length()).toLowerCase())) {
-                                        tempOutBuff.write(line + "\n" + stBuilder.toString() + "\n");
+                                    String sufix = seq.substring(seq.length() - numberOfCharsForPrefixSufix, seq.length()).toLowerCase();
+                                    
+                                    if (sufixesFound.contains(sufix)) {
+                                        tempOutBuff.write(lastHeader + "\n" + stBuilder.toString() + "\n");
                                         tempFasta2FilteredSetSize++;
                                         passedFilter = true;
                                         tempFasta2FilteredSetSize++;
@@ -181,6 +184,9 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
 
                             stBuilder.delete(0, stBuilder.length());
                         }
+                        
+                        lastHeader = line;
+                        
                     } else {
                         stBuilder.append(line.trim());
                     }
@@ -197,7 +203,7 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                 if (stBuilder.length() > 0) {
 
                     if (seqLengthsFoundInFasta1.contains(stBuilder.length())) {
-                        tempOutBuff.write(line + "\n" + stBuilder.toString() + "\n");
+                        tempOutBuff.write(lastHeader + "\n" + stBuilder.toString() + "\n");
                         tempFasta2FilteredSetSize++;
                     } else {
                         fasta2DiscardedSeqs++;
@@ -232,12 +238,11 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                 lineCounter = 0;
                 String fastaSet2ID = "";
                 while ((line = reader.readLine()) != null) {
-
+                    
                     if (line.charAt(0) == '>') {
 
-                        fastaSet2ID = line.trim().substring(1);
-
                         if (stBuilder.length() > 0) {
+                                                        
                             String seq = stBuilder.toString();
                             String prefix = seq.substring(0, numberOfCharsForPrefixSufix).toLowerCase();
 
@@ -246,10 +251,16 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                                 list = new LinkedList<Pair<String, String>>();
                                 seqMap.put(prefix, list);
                             }
+                            System.out.println("fastaSet2ID = " + fastaSet2ID);
+                            System.out.println("seq = " + seq);
+                            
                             list.add(new Pair<String, String>(fastaSet2ID, seq));
 
                             stBuilder.delete(0, stBuilder.length());
                         }
+
+                        fastaSet2ID = line.trim().substring(1);
+
                     } else {
                         stBuilder.append(line.trim());
                     }
@@ -303,12 +314,14 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                             } else {
                                 boolean found = false;
                                 for (int i = 0; i < list.size(); i++) {
+
+                                    fastaSet2ID = list.get(i).getValue1();
+                                    String fastaSet2Seq = list.get(i).getValue2();
+                                    
                                     if (seq.toLowerCase().equals(list.get(i).getValue2().toLowerCase())) {
                                         found = true;
                                         seqsFound++;
 
-                                        fastaSet2ID = list.get(i).getValue1();
-                                        String fastaSet2Seq = list.get(i).getValue2();
 
                                         outTSVBuff.write(fastaSet1Header.replaceAll("\t", "") + "\t" + fastaSet2ID.replaceAll("\t", "") + "\n");
                                         outFastaBuff.write(">" + fastaSet2ID + "|" + fastaSet1ID + "\n" + FastaUtil.formatSequenceWithFastaFormat(fastaSet2Seq, FASTA_LINE_LENGTH));
@@ -322,10 +335,10 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
 
                             stBuilder.delete(0, stBuilder.length());
                         }
-                        
+
                         fastaSet1ID = line.substring(1).trim().split(" ")[0];
                         fastaSet1Header = line.substring(1);
-                        
+
                     } else {
                         stBuilder.append(line);
                     }
@@ -381,14 +394,14 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                 tempOutFile.delete();
                 System.out.println("Done!");
 
-                System.out.println("Writing stats file...");  
+                System.out.println("Writing stats file...");
                 BufferedWriter statsBuff = new BufferedWriter(new FileWriter(outStatsFile));
                 statsBuff.write("There were " + seqsFound + " sequences found in set 2... :)\n");
                 statsBuff.write(seqsNotFound + " were NOT found in set 2... :(\n");
                 statsBuff.close();
-                System.out.println("Done!");               
-                
-                
+                System.out.println("Done!");
+
+
                 System.out.println("The program finished!");
                 System.out.println("There were " + seqsFound + " sequences found in set 2... :)");
                 System.out.println(seqsNotFound + " were NOT found in set 2... :(");
@@ -402,7 +415,7 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                     logger.log(Level.SEVERE, stackTraceElement.toString());
                 }
             }
-            
+
             fh.close();
         }
     }
