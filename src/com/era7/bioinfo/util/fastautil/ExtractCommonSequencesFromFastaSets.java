@@ -251,8 +251,8 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                                 list = new LinkedList<Pair<String, String>>();
                                 seqMap.put(prefix, list);
                             }
-                            System.out.println("fastaSet2ID = " + fastaSet2ID);
-                            System.out.println("seq = " + seq);
+                            //System.out.println("fastaSet2ID = " + fastaSet2ID);
+                            //System.out.println("seq = " + seq);
                             
                             list.add(new Pair<String, String>(fastaSet2ID, seq));
 
