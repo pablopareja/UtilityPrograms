@@ -57,7 +57,7 @@ public class ExtractCommonSequencesFromFastaSets implements Executable {
                     + "1. Input FASTA file 1 \n"
                     + "2. Input FASTA file 2 \n"
                     + "3. Outupt FASTA file name \n"
-                    + "4. Output TSV file name (including RDP --> NT id pairs) \n"
+                    + "4. Output TSV file name (including Set1 --> Set2 id pairs) \n"
                     + "5. Number of chars for prefix/sufix filter (int) \n"
                     + "6. Statistics file name");
         } else {

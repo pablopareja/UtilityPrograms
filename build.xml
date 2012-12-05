@@ -185,18 +185,59 @@
 <!--    <target name="-post-jar">
         <jar jarfile="jars/ExportGoSlimToTSV.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-            <zipfileset src="lib/Era7BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.go.ExportGoSlimToTSV"/>
             </manifest>
         </jar>
     </target>-->
-    <target name="-post-jar">
+<!--    <target name="-post-jar">
         <jar jarfile="jars/RemoveExtraVerticalBarsFromFastaHeaders.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.era7.bioinfo.util.fastautil.RemoveExtraVerticalBarsFromFastaHeaders"/>
+            </manifest>
+        </jar>
+    </target>-->
+<!--    <target name="-post-jar">
+        <jar jarfile="jars/UploadFileToS3.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoAWS-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.s3.UploadFileToS3"/>
+            </manifest>
+        </jar>
+    </target>-->
+<!--    <target name="-post-jar">
+        <jar jarfile="jars/ClusterProfileProgram.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.ClusterProfileProgram"/>
+            </manifest>
+        </jar>
+    </target>-->
+<!--    <target name="-post-jar">
+        <jar jarfile="jars/LookForRDPTaxonomyHits.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/Bio4j-0.8-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.rdp.LookForRDPTaxonomyHits"/>
+            </manifest>
+        </jar>
+    </target>-->
+    
+    <target name="-post-jar">
+        <jar jarfile="jars/ExecuteUtility.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoAWS-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <zipfileset src="lib/BioinfoXML-1.0-jar-with-dependencies.jar" excludes="META-INF/*" />
+            <manifest>
+                <attribute name="Main-Class" value="com.era7.bioinfo.util.ExecuteUtility"/>
             </manifest>
         </jar>
     </target>
