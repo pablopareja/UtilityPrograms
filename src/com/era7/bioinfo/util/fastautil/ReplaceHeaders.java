@@ -24,9 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
-public class ProcessWeirdCharsFromFastaHeaders implements Executable{
-
-    public static final int SEQUENCE_LINE_LEGTH = 60;
+public class ReplaceHeaders implements Executable{
     
     @Override
     public void execute(ArrayList<String> array) {
@@ -39,10 +37,11 @@ public class ProcessWeirdCharsFromFastaHeaders implements Executable{
 
     public static void main(String[] args) {
 
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.out.println("This program expects the following parameters: \n"
                     + "1. Input fasta filename \n"
-                    + "2. Output resulting fasta filename");
+                    + "2. Output resulting fasta filename \n"
+                    + "3. Equivalence between identifiers TSV filename");
         } else {
 
 
@@ -51,7 +50,10 @@ public class ProcessWeirdCharsFromFastaHeaders implements Executable{
             try {
 
                 BufferedWriter outWriter = new BufferedWriter(new FileWriter(new File(args[1])));
+                BufferedWriter tsvWriter = new BufferedWriter(new FileWriter(new File(args[2])));
 
+                int counter = 1;
+                
                 File inFile = new File(args[0]);
                 reader = new BufferedReader(new FileReader(inFile));
                 String line;
@@ -60,8 +62,13 @@ public class ProcessWeirdCharsFromFastaHeaders implements Executable{
 
                     if (line.startsWith(">")) {
 
-                        line = line.replaceAll("\\|", "_").replaceAll("\\.", "_").replaceAll("/", "_");
-
+                        String idSt = line.substring(1).trim();
+                        
+                        line = ">" + counter;
+                        
+                        tsvWriter.write(idSt + "\t" + counter + "\n");
+                                
+                        counter++;
                     } 
                     
                     outWriter.write(line + "\n");
@@ -71,6 +78,7 @@ public class ProcessWeirdCharsFromFastaHeaders implements Executable{
 
                 reader.close();
                 outWriter.close();
+                tsvWriter.close();
                 
                 System.out.println("Done! ;)");
 
