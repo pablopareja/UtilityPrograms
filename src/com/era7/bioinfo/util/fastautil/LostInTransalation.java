@@ -27,14 +27,14 @@ public class LostInTransalation {
             System.out.println("This program expects the following parameters:\n"
                     + "1. Input FASTA file \n"
                     + "2. Input TSV file \n"
-                    + "3. Output FASTA file name\n" 
+                    + "3. Output FASTA file name\n"
                     + "4. Genetic code file");
         } else {
 
             String inFastaFileSt = args[0];
             String inTSVFileSt = args[1];
             String outFileSt = args[2];
-            String geneticCodeFileSt = args[3];            
+            String geneticCodeFileSt = args[3];
 
             File inFastaFile = new File(inFastaFileSt);
             File inTSVFile = new File(inTSVFileSt);
@@ -48,42 +48,53 @@ public class LostInTransalation {
                 reader = new BufferedReader(new FileReader(inTSVFile));
                 String line;
                 System.out.println("Reading TSV file...");
-                reader.readLine(); //skipping header
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     String[] columns = line.split("\t");
                     positionsMap.put(columns[0], Integer.parseInt(columns[1]));
                 }
                 reader.close();
                 System.out.println("Done!");
-                
-                BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));    
-                
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+
                 System.out.println("Reading FASTA file...");
+                
                 boolean firstSeq = true;
+                String lastHeader = "";
+                int startPosition = -1;
+                
                 StringBuilder seqStBuilder = new StringBuilder();
                 reader = new BufferedReader(new FileReader(inFastaFile));
-                while((line = reader.readLine()) != null){
-                    if(line.startsWith(">")){
-                        if(!firstSeq){
-                            int startPosition = -1;
-                            for (String key : positionsMap.keySet()) {
-                                if(line.substring(1).indexOf(key) >= 0){
-                                    startPosition = positionsMap.get(key) - 1;
-                                    break;
-                                }
-                            }
-                            writer.write(line + "\n");
+                
+                while ((line = reader.readLine()) != null) {
+                    if (line.startsWith(">")) {                        
+                        if (!firstSeq) {
+                            writer.write(lastHeader + "\n");
                             writer.write(FastaUtil.formatSequenceWithFastaFormat(SeqUtil.translateDNAtoProtein(seqStBuilder.toString().substring(startPosition), geneticCodeFile), 60));
                             seqStBuilder.delete(0, seqStBuilder.length());
                         }
+                        lastHeader = line;
+                        for (String key : positionsMap.keySet()) {
+                            if (line.substring(1).indexOf(key) >= 0) {
+                                startPosition = positionsMap.get(key) - 1;
+                                break;
+                            }
+                        }
                         firstSeq = false;
-                    }else{
+                    } else {
                         seqStBuilder.append(line);
                     }
                 }
                 reader.close();
+
+                //---last seq---
+                writer.write(lastHeader + "\n");
+                writer.write(FastaUtil.formatSequenceWithFastaFormat(SeqUtil.translateDNAtoProtein(seqStBuilder.toString().substring(startPosition), geneticCodeFile), 60));
+                seqStBuilder.delete(0, seqStBuilder.length());
+
+
                 writer.close();
-                
+
                 System.out.println("Output file created! ;)");
 
             } catch (Exception ex) {
