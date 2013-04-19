@@ -4,6 +4,7 @@
  */
 package com.era7.bioinfo.util.fastautil;
 
+import com.era7.lib.bioinfo.bioinfoutil.Executable;
 import com.era7.lib.bioinfo.bioinfoutil.fasta.FastaUtil;
 import com.era7.lib.bioinfo.bioinfoutil.seq.SeqUtil;
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +21,16 @@ import java.util.logging.Logger;
  *
  * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
-public class LostInTransalation {
+public class LostInTransalation implements Executable{
+    
+    @Override
+    public void execute(ArrayList<String> array) {
+        String[] args = new String[array.size()];
+        for (int i = 0; i < array.size(); i++) {
+            args[i] = array.get(i);
+        }
+        main(args);
+    }
 
     public static void main(String[] args) {
 
@@ -67,31 +78,37 @@ public class LostInTransalation {
                 reader = new BufferedReader(new FileReader(inFastaFile));
                 
                 while ((line = reader.readLine()) != null) {
-                    if (line.startsWith(">")) {                        
+                    
+                    if (line.startsWith(">")) {        
+                        
                         if (!firstSeq) {
                             writer.write(lastHeader + "\n");
                             writer.write(FastaUtil.formatSequenceWithFastaFormat(SeqUtil.translateDNAtoProtein(seqStBuilder.toString().substring(startPosition), geneticCodeFile), 60));
                             seqStBuilder.delete(0, seqStBuilder.length());
                         }
+                        
                         lastHeader = line;
+                        
                         for (String key : positionsMap.keySet()) {
                             if (line.substring(1).indexOf(key) >= 0) {
                                 startPosition = positionsMap.get(key) - 1;
                                 break;
                             }
                         }
+                        
                         firstSeq = false;
+                        
                     } else {
                         seqStBuilder.append(line);
                     }
                 }
+                
                 reader.close();
 
                 //---last seq---
                 writer.write(lastHeader + "\n");
                 writer.write(FastaUtil.formatSequenceWithFastaFormat(SeqUtil.translateDNAtoProtein(seqStBuilder.toString().substring(startPosition), geneticCodeFile), 60));
                 seqStBuilder.delete(0, seqStBuilder.length());
-
 
                 writer.close();
 
@@ -100,7 +117,6 @@ public class LostInTransalation {
             } catch (Exception ex) {
                 Logger.getLogger(LostInTransalation.class.getName()).log(Level.SEVERE, null, ex);
             }
-
 
         }
 
