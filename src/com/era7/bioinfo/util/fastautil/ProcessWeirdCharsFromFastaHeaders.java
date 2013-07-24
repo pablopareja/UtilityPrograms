@@ -60,7 +60,7 @@ public class ProcessWeirdCharsFromFastaHeaders implements Executable{
 
                     if (line.startsWith(">")) {
 
-                        line = line.replaceAll("\\|", "_").replaceAll("\\.", "_").replaceAll("/", "_");
+                        line = line.replaceAll("\\|", "_").replaceAll("\\.", "_").replaceAll("/", "_").replaceAll(" ", "_");
 
                     } 
                     
