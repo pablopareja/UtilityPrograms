@@ -68,7 +68,7 @@ public class GetRidOfChars implements Executable {
                             }
                             int counter = 1;
                             for (SequenceTract seqTract : seqTracts) {
-                                outWriter.write(">" + lastID + "|" + seqTract.getRelativeStartPosition() + "Fragment_" + counter + "\n");
+                                outWriter.write(">" + lastID + "|" + "Fragment_" + counter + "\n");
                                 outWriter.write(FastaUtil.formatSequenceWithFastaFormat(seqTract.getSequence(), SEQUENCE_LINE_LEGTH));
                                 counter++;
                                 newTotalCounter++;
@@ -93,7 +93,7 @@ public class GetRidOfChars implements Executable {
                     }
                     int counter = 1;
                     for (SequenceTract seqTract : seqTracts) {
-                        outWriter.write(">" + lastID + "|" + seqTract.getRelativeStartPosition() + "Fragment_" + counter + "\n");
+                        outWriter.write(">" + lastID + "|" + "Fragment_" + counter + "\n");
                         outWriter.write(FastaUtil.formatSequenceWithFastaFormat(seqTract.getSequence(), SEQUENCE_LINE_LEGTH));
                         counter++;
                         newTotalCounter++;
